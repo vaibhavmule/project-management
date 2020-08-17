@@ -8,6 +8,7 @@ app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
 app.config['SECRET_KEY'] = 'some super secret key!'
 
 mongo = PyMongo(app)
+db = mongo.db
 
 socketio = SocketIO(app, logger=True)
 

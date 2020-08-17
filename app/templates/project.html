@@ -22,26 +22,28 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript">
-      var socket = io.connect('http://' + document.domain + ':' + location.port);
+		const socket = io('/comment', {
+			transports: ['websocket']
+		});
 
-      socket.on('connect', function() {
-        var form = $( 'form' ).on( 'submit', function( e ) {
-          e.preventDefault()
-          let text = $('#text').val()
-          socket.emit('post_comment', {
-          	id: "{{project._id}}",
-            text : text
-          } )
-          $('#text').val('').focus()
-        })
-      })
+		socket.on('connect', function() {
+			var form = $('form').on('submit', function( e ) {
+				e.preventDefault()
+				let text = $('#text').val()
+				socket.emit('comment', {
+					id: "{{project._id}}",
+					text : text
+				})
+				$('#text').val('').focus()
+			})
+		})
 
-      socket.on('append_comment', function(data) {
-        console.log(data)
-        if(text) {
-          $('div.comments').append('<p>' + data.text + '</p>')
-        }
-      })
+		socket.on('comment', function(data) {
+			console.log(data)
+			if(text) {
+			  $('div.comments').append('<p>' + data.text + '</p>')
+			}
+		})
     </script>
 
 </body>

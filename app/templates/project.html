@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Project View</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-</head>
-<body>
+{% extends "base.html" %}
+{% block body %}
+	<div class="container">
+    <div class="row">
+    <div class="col-md-12 col-md-offset-4">
 	<h1>{{ project.title }}</h1>
 
 	<div class="comments">
@@ -18,8 +15,10 @@
 		<input type="text" name="text" id="text" required>
 		<input type="submit" >
 	</form>
+	</div>
+	</div>
+	</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript">
 		const socket = io('/comment', {
@@ -45,6 +44,4 @@
 			}
 		})
     </script>
-
-</body>
-</html>
+{% endblock %}

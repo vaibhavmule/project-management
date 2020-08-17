@@ -1,12 +1,16 @@
-<html>
-    <head>
-        <title>{{ title }} - Project Management</title>
-    </head>
-    <body>
-        <h1>Create Project</h1>
-        <form method="POST">
-        	<input type="text" name="title" required>
-        	<input type="submit" >
-        </form>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block body %}
+	<div class="container">
+	    <div class="row">
+		    <div class="col-md-12 col-md-offset-4">
+			    <h1>Create Project</h1>
+			    <form method="POST">
+			    	<input type="text" name="title" required>
+			    	<br>
+			    	<br>
+			    	<input type="submit" >
+			    </form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

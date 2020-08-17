@@ -1,9 +1,9 @@
 from flask import render_template, request, redirect
-from app import app, db, socketio
+from app import app, db, socketio, login_required
 from bson import ObjectId
 
+
 @app.route('/')
-@app.route('/index')
 def index():
 	projects = db.projects.find()
 	return render_template('index.html', title='Home', projects=projects)
@@ -24,7 +24,22 @@ def project(id):
 	return render_template('project.html', project=project)
 
 
+@app.route('/login')
+def login():
+	return render_template('auth/login.html')
+
+
+@app.route('/register')
+def register():
+	return render_template('auth/login.html')
+
+
+@app.route('/logout')
+def logout():
+	return redirect('/')
+
+
 @socketio.on('comment', namespace='/comment')
 def post_comment(data):
-    mongo.db.projects.update({'_id': ObjectId(data['id'])}, {'$push': {'comments': data['text']}})
+    db.projects.update({'_id': ObjectId(data['id'])}, {'$push': {'comments': data['text']}})
     socketio.emit('comment', data, namespace='/comment')

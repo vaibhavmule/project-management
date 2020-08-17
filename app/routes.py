@@ -19,7 +19,11 @@ def create_project():
 	return render_template('create.html')
 
 
-@app.route('/<id>')
-def project(id):	
+@app.route('/<id>', methods=['GET', 'POST'])
+def project(id):
+	if request.method == 'POST':
+		text = request.form['text']
+		mongo.db.projects.update({'_id': ObjectId(id)}, {'$push': {'comments': text}})
+		return redirect('/' + id)
 	project = mongo.db.projects.find_one({'_id': ObjectId(id)})
 	return render_template('project.html', project=project)

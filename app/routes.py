@@ -31,7 +31,7 @@ def login():
 
 @app.route('/register')
 def register():
-	return render_template('auth/login.html')
+	return render_template('auth/register.html')
 
 
 @app.route('/logout')

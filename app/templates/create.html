@@ -5,12 +5,17 @@
 		    <div class="col-md-12 col-md-offset-4">
 			    <h1>Create Project</h1>
 			    <hr>
-			    <form method="POST">
-			    	<input type="text" name="title" required>
-			    	<br>
-			    	<br>
-			    	<input type="submit" >
-			    </form>
+				<form method=POST>
+	                <div class="form-group">
+	                    <label for="title">Project Title</label>
+	                    <input type="text" class="form-control" name="title" placeholder="Project Title">
+	                </div>
+	                <div class="form-group">
+	                    <label for="password">Users</label>
+	                    <input type="text" class="form-control" name="users" placeholder="Users">
+	                </div>
+	                <button type="submit" class="btn btn-primary btn-block">Create</button>
+	            </form>
 			</div>
 		</div>
 	</div>

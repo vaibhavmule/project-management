@@ -41,5 +41,6 @@ def logout():
 
 @socketio.on('comment', namespace='/comment')
 def post_comment(data):
-    db.projects.update({'_id': ObjectId(data['id'])}, {'$push': {'comments': data['text']}})
-    socketio.emit('comment', data, namespace='/comment')
+	print(data)
+	db.projects.update({'_id': ObjectId(data['id'])}, {'$push': {'comments': data['text']}})
+	socketio.emit('comment', data, namespace='/comment')

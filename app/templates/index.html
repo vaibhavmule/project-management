@@ -3,7 +3,7 @@
         <title>{{ title }} - Project Management</title>
     </head>
     <body>
-        <h1>Projects</h1>
+        <h1>Projects | <span><a href="/create">Create</a></span></h1> 
         {% for project in projects %}
         	<a href="/{{project._id}}"><h2>{{ project.title }}</h2></a>
         {% endfor %}

@@ -1,7 +1,6 @@
 from flask import render_template, request, redirect
-from app import app, mongo
+from app import app, mongo, socketio
 from bson import ObjectId
-
 
 @app.route('/')
 @app.route('/index')
@@ -27,3 +26,8 @@ def project(id):
 		return redirect('/' + id)
 	project = mongo.db.projects.find_one({'_id': ObjectId(id)})
 	return render_template('project.html', project=project)
+
+@socketio.on('post_comment')
+def post_comment(data):
+    mongo.db.projects.update({'_id': ObjectId(data['id'])}, {'$push': {'comments': data['text']}})
+    socketio.emit('append_comment', data)

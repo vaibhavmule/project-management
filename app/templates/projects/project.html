@@ -7,7 +7,7 @@
 	<hr>
 	<div class="comments">
 	{% for comment in project.comments %}
-    	<p>{{comment}}</p>
+    	<p>{{comment.text}}</p>
     	<hr>
     {% endfor %}
     </div>
@@ -32,7 +32,7 @@
 				e.preventDefault()
 				let text = $('#text').val()
 				socket.emit('comment', {
-					id: "{{project._id}}",
+					id: "{{project.id}}",
 					text : text
 				})
 				$('#text').val('').focus()

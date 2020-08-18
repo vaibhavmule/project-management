@@ -3,11 +3,13 @@ from app import app, db, socketio, login_required
 from bson import ObjectId
 from passlib.hash import pbkdf2_sha256
 
+from .projects import Project, Comment
+
 
 @app.route('/')
 @login_required
 def index():
-	projects = db.projects.find()
+	projects = Project.objects.all()
 	return render_template('index.html', title='Home', projects=projects)
 
 
@@ -16,7 +18,7 @@ def index():
 def create_project():
 	if request.method == 'POST':
 		title = request.form['title']
-		db.projects.insert_one({'title': title})
+		Project(title=title).save()
 		return redirect('/')
 	return render_template('projects/create.html')
 
@@ -24,8 +26,16 @@ def create_project():
 @app.route('/projects/<id>', methods=['GET', 'POST'])
 @login_required
 def project(id):
-	project = db.projects.find_one({'_id': ObjectId(id)})
+	project = Project.objects.get(id=id)
 	return render_template('projects/project.html', project=project)
+
+
+@socketio.on('comment', namespace='/comment')
+def post_comment(data):
+	project = Project.objects(id=data['id'])
+	comment = Comment(text=data['text'])
+	project.update_one(push__comments=comment)
+	socketio.emit('comment', data, namespace='/comment')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -63,9 +73,3 @@ def register():
 def logout():
 	session.clear()
 	return redirect('/')
-
-
-@socketio.on('comment', namespace='/comment')
-def post_comment(data):
-	db.projects.update({'_id': ObjectId(data['id'])}, {'$push': {'comments': data['text']}})
-	socketio.emit('comment', data, namespace='/comment')

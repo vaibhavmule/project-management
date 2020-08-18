@@ -7,18 +7,26 @@
     {% if project %}
 		<h1>{{ project.title }}</h1>
 		<hr>
+		<form method="POST">
+	    	<div class="form-group">
+		    	<textarea class="form-control" id="text" rows="3" name="text"></textarea>
+		  	</div>
+
+ 		<button type="submit" class="btn btn-primary btn-block">Submit</button>
+		</form>
+		<br>
 		<div class="comments">
-		{% for comment in project.comments %}
-	    	<p>{{comment.text}}</p>
-	    	<hr>
+		{% for comment in project.comments|reverse %}
+	    	<div class="card">
+			  <div class="card-body">
+			    <p class="card-text">{{comment.text}}</p>
+			    by <a href="#" class="card-link">{{comment.by.username}}</a>
+			  </div>
+			</div>
+			<br>
 	    {% endfor %}
 	    </div>
 
-	    <form method="POST">
-			<input type="text" name="text" id="text" required>
-			<input type="submit" >
-		</form>
-		<br>
 		</div>
 		</div>
 		</div>
@@ -42,9 +50,10 @@
 			})
 
 			socket.on('comment', function(data) {
-				console.log(data)
 				if(text) {
-				  $('div.comments').append('<p>' + data.text + '</p>')
+				  $('div.comments').prepend(
+				    	'<div class="card"><div class="card-body"><p class="card-text">' + data.text + '</p>' + 'by <a href="#" class="card-link">' + data.by + '</a></div></div><br>'
+				  )
 				}
 			})
 	    </script>

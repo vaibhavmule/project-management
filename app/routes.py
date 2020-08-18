@@ -48,9 +48,13 @@ def project(id):
 @socketio.on('comment', namespace='/comment')
 def post_comment(data):
 	project = Project.objects(id=data['id'])
-	comment = Comment(text=data['text'])
+	comment = Comment(text=data['text'], by=current_user.id)
 	project.update_one(push__comments=comment)
-	socketio.emit('comment', data, namespace='/comment')
+	emit_data = {
+		'text': comment.text,
+		'by': comment.by.username
+	}
+	socketio.emit('comment', emit_data, namespace='/comment')
 
 
 """

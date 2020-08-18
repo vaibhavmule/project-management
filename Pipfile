@@ -10,7 +10,7 @@ flask-socketio = "*"
 flask-pymongo = "*"
 gevent = "*"
 gevent-websocket = "*"
-bcrypt = "*"
+passlib = "*"
 
 [dev-packages]
 

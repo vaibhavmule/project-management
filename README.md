@@ -10,6 +10,12 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install depende
 pip install -r requirements.txt
 ```
 
+set the .env fil
+
+```bash
+cp -r .envexample .env
+```
+
 Run the project
 
 ```bash

@@ -1,7 +1,8 @@
-from flask import render_template, request, redirect, session, url_for, abort, flash
-from flask_login import login_required, login_user, current_user
+from flask import render_template, request, redirect, session, url_for, flash
+from flask_login import login_required, login_user, current_user, logout_user
 
-from app import app, db, socketio
+from app import app, socketio
+
 from .projects import Project, Comment
 from .auth import User, permission_required
 
@@ -29,7 +30,7 @@ def create_project():
 		engineers = request.form.getlist('engineers')
 		users = [User.objects(id=engineer).first() for engineer in engineers]
 		Project(title=title, engineers=users).save()
-		return redirect('/')
+		return redirect(url_for('index'))
 	users = User.objects(role='engineer')
 	return render_template('projects/create.html', users=users)
 
@@ -93,5 +94,5 @@ def register():
 @app.route('/logout')
 @login_required
 def logout():
-	session.clear()
-	return redirect('/')
+	logout_user()
+	return redirect(url_for('index'))

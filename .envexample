@@ -1,2 +1,4 @@
 FLASK_APP=server.py
 FLASK_ENV=development
+SECRET_KEY=adsjflads8f8dsfd8saf8dsa8f
+MONGO_URI=mongodb://localhost:27017/project_management

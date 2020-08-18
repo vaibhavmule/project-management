@@ -1,12 +1,17 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_socketio import SocketIO
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
 
+from dotenv import load_dotenv
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
 app = Flask(__name__)
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/project_management"
-app.config['SECRET_KEY'] = 'some super secret key!'
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 
 socketio = SocketIO(app, logger=True)
 

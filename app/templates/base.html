@@ -24,7 +24,9 @@
           {{current_user.username}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          {% if current_user.role == 'project_manager' %}
           <a class="dropdown-item" href="/projects/create">Create Project</a>
+          {% endif %}
           <a class="dropdown-item" href="/logout">Logout</a>
         </div>
       </li>

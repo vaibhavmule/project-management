@@ -56,7 +56,7 @@ def post_comment(data):
 		'by': comment.by.username
 	}
 	socketio.emit('comment', emit_data, namespace='/comment')
-	socketio.emit('notification', emit_data, namespace='/comment')
+	socketio.emit('notification', emit_data, namespace='/')
 
 
 """

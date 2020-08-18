@@ -23,13 +23,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript">
-		const socket = io('/comment',{
+    	const current_user = "{{current_user.username}}"
+		const socket = io({
 			transports: ['websocket']
 		});
 
-		socket.on('comment', function(data) {
+		socket.on('notification', function(data) {
 			$('#' + data.project_id).html('')
-			if(data) {
+
+			if(data.by !== current_user) {
 			  $('#' + data.project_id).append(
 			  	'<div class="alert alert-success" role="alert">' + data.by + ' recently commented—<a href="/projects/' + data.project_id + '">check it out</a>!</div>'
 			  )

@@ -11,6 +11,8 @@ flask-pymongo = "*"
 gevent = "*"
 gevent-websocket = "*"
 passlib = "*"
+flask-mongoengine = "*"
+flask-login = "*"
 
 [dev-packages]
 

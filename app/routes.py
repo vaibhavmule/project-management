@@ -51,10 +51,12 @@ def post_comment(data):
 	comment = Comment(text=data['text'], by=current_user.id)
 	project.update_one(push__comments=comment)
 	emit_data = {
+		'project_id': data['id'],
 		'text': comment.text,
 		'by': comment.by.username
 	}
 	socketio.emit('comment', emit_data, namespace='/comment')
+	socketio.emit('notification', emit_data, namespace='/comment')
 
 
 """

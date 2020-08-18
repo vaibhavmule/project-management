@@ -1,3 +1,6 @@
+import os
+from os.path import join, dirname
+
 from flask import Flask
 from flask_socketio import SocketIO
 from flask_mongoengine import MongoEngine

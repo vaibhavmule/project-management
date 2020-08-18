@@ -8,13 +8,17 @@
 				<form method=POST>
 	                <div class="form-group">
 	                    <label for="title">Project Title</label>
-	                    <input type="text" class="form-control" name="title" placeholder="Project Title">
+	                    <input type="text" class="form-control" name="title" placeholder="Project Title" required>
 	                </div>
-	                <div class="form-group">
-	                    <label for="password">Users</label>
-	                    <input type="text" class="form-control" name="users" placeholder="Users">
-	                </div>
-	                <button type="submit" class="btn btn-primary btn-block">Create</button>
+					<div class="form-group">
+					<label for="engineers">Engineers</label>
+					<select multiple class="form-control" id="engineers" name=engineers required>
+						{% for user in users %}
+							<option value="{{user.id}}">{{user.username}}</option>
+						{% endfor %}
+					</select>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block">Create</button>
 	            </form>
 			</div>
 		</div>

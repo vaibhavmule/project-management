@@ -3,47 +3,52 @@
 	<div class="container">
     <div class="row">
     <div class="col-md-12 col-md-offset-4">
-	<h1>{{ project.title }}</h1>
-	<hr>
-	<div class="comments">
-	{% for comment in project.comments %}
-    	<p>{{comment.text}}</p>
-    	<hr>
-    {% endfor %}
-    </div>
 
-    <form method="POST">
-		<input type="text" name="text" id="text" required>
-		<input type="submit" >
-	</form>
-	<br>
-	</div>
-	</div>
-	</div>
+    {% if project %}
+		<h1>{{ project.title }}</h1>
+		<hr>
+		<div class="comments">
+		{% for comment in project.comments %}
+	    	<p>{{comment.text}}</p>
+	    	<hr>
+	    {% endfor %}
+	    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-    <script type="text/javascript">
-		const socket = io('/comment', {
-			transports: ['websocket']
-		});
+	    <form method="POST">
+			<input type="text" name="text" id="text" required>
+			<input type="submit" >
+		</form>
+		<br>
+		</div>
+		</div>
+		</div>
 
-		socket.on('connect', function() {
-			var form = $('form').on('submit', function( e ) {
-				e.preventDefault()
-				let text = $('#text').val()
-				socket.emit('comment', {
-					id: "{{project.id}}",
-					text : text
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+	    <script type="text/javascript">
+			const socket = io('/comment', {
+				transports: ['websocket']
+			});
+
+			socket.on('connect', function() {
+				var form = $('form').on('submit', function( e ) {
+					e.preventDefault()
+					let text = $('#text').val()
+					socket.emit('comment', {
+						id: "{{project.id}}",
+						text : text
+					})
+					$('#text').val('').focus()
 				})
-				$('#text').val('').focus()
 			})
-		})
 
-		socket.on('comment', function(data) {
-			console.log(data)
-			if(text) {
-			  $('div.comments').append('<p>' + data.text + '</p>')
-			}
-		})
-    </script>
+			socket.on('comment', function(data) {
+				console.log(data)
+				if(text) {
+				  $('div.comments').append('<p>' + data.text + '</p>')
+				}
+			})
+	    </script>
+	{% else %}
+        <div class="alert alert-danger">Error: Project does not exist</div>
+	{% endif %}
 {% endblock %}

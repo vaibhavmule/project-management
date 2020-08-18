@@ -1,32 +1,47 @@
-from flask import render_template, request, redirect, session, url_for
-from app import app, db, socketio, login_required
-from bson import ObjectId
-from passlib.hash import pbkdf2_sha256
+from flask import render_template, request, redirect, session, url_for, abort, flash
+from flask_login import login_required, login_user, current_user
 
+from app import app, db, socketio
 from .projects import Project, Comment
+from .auth import User, permission_required
 
+
+"""
+Projects
+"""
 
 @app.route('/')
 @login_required
 def index():
-	projects = Project.objects.all()
+	if current_user.role == 'project_manager':
+		projects = Project.objects()
+	elif current_user.role == 'engineer':
+		projects = Project.objects(engineers__in=[current_user.id])
 	return render_template('index.html', title='Home', projects=projects)
 
 
 @app.route('/projects/create', methods=['GET','POST'])
 @login_required
+@permission_required('project_manager')
 def create_project():
 	if request.method == 'POST':
 		title = request.form['title']
-		Project(title=title).save()
+		engineers = request.form.getlist('engineers')
+		users = [User.objects(id=engineer).first() for engineer in engineers]
+		Project(title=title, engineers=users).save()
 		return redirect('/')
-	return render_template('projects/create.html')
+	users = User.objects(role='engineer')
+	return render_template('projects/create.html', users=users)
 
 
 @app.route('/projects/<id>', methods=['GET', 'POST'])
 @login_required
 def project(id):
-	project = Project.objects.get(id=id)
+	project = Project.objects(id=id)
+	if current_user.role == 'project_manager':
+		project = project.first()
+	elif current_user.role == 'engineer':
+		project = project(engineers__in=[current_user.id]).first()
 	return render_template('projects/project.html', project=project)
 
 
@@ -38,33 +53,34 @@ def post_comment(data):
 	socketio.emit('comment', data, namespace='/comment')
 
 
+"""
+Authentication
+"""
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST':
-		user = db.users.find_one({
-		  "username": request.form.get('username')
-		})
-		if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
-			session['username'] = request.form.get('username')
+		user = User.objects(username=request.form.get('username')).first()
+		if user and user.check_password(request.form.get('password')):
+			login_user(user)
 			return redirect(url_for('index'))
+		flash('Invalid login credentials.')
 	return render_template('auth/login.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	if request.method == 'POST':
-		users = db.users
-		exists = users.find_one({'username' : request.form['username']})
-		if not exists:
-			users.insert_one({
-				'username' : request.form['username'],
-				'password' : pbkdf2_sha256.encrypt(request.form['password']),
-				'role': int(request.form['role'])
-			})
-			session['username'] = request.form['username']
+		user = User.objects(username=request.form.get('username')).first()
+		if not user:
+			new_user = User(username=request.form.get('username'))
+			new_user.set_password(password=request.form.get('password'))
+			new_user.role = request.form.get('role')
+			new_user.save()
+			login_user(new_user)
 			return redirect(url_for('index'))
 
-		return "The username already exists"
+		flash('The username is already exists.')
 	return render_template('auth/register.html')
 
 

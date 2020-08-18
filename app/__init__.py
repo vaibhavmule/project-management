@@ -1,7 +1,7 @@
-from flask import Flask, session, flash, redirect, url_for
+from flask import Flask, render_template
 from flask_socketio import SocketIO
 from flask_mongoengine import MongoEngine
-from functools import wraps
+from flask_login import LoginManager
 
 app = Flask(__name__)
 
@@ -12,15 +12,13 @@ socketio = SocketIO(app, logger=True)
 
 db = MongoEngine(app)
 
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'username' in session:
-            return f(*args, **kwargs)
-        else:
-            flash("You need to login first")
-            return redirect(url_for('login'))
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-    return wrap
+@login_manager.user_loader
+def load_user(user_id):
+	from .auth import User
+	return User.objects(pk=user_id).first()
 
 from app import routes

@@ -7,6 +7,12 @@
 		<hr>
 		{% for project in projects %}
 			<a href="/projects/{{project.id}}"><h3>{{ project.title }}</h3></a>
+			<p> <b>Members:</b>
+			{% for engineer in project.engineers %}
+				{{engineer.username}}
+			{% endfor %}
+			</p>
+			<hr>
 		{% endfor %}
 		</div>
 	</div>

@@ -10,7 +10,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install depende
 pip install -r requirements.txt
 ```
 
-set the .env fil
+set the `.env` file
 
 ```bash
 cp -r .envexample .env
